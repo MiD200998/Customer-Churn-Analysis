@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  {{MEDIA_URL}}  
+  
+  <table classtable">
+    <thead>
+        <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+        
+        <th>Edit</th>
+        <th>Delete</th>
+
+        <th>Image</th>
+      
+    </thead>
+    {% if key1 %}
+    {% for a in key1 %}
+    <tbody>
+      <tr>
+        <td>{{a.FirstName}}</td>
+        <td>{{a.LastName}}</td>
+        <td>{{a.Email}}</td>
+        
+        <td>
+
+          <form action="{% url 'editpage' pk=a.id %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value="{{a.id}}">
+            <input type="submit" value="Edit">
+
+          </form>
+          </td>
+          <td>
+          <form action="{% url 'delete' pk=a.id %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value="{{a.id}}">
+            <input type="submit" value="Delete">
+            </form>
+          </td>
+            <!-- <td>{{MEDIA_URL}}{{a.Image.url}}</td> -->
+            <td> <img src="{{MEDIA_URL}}{{a.Image.url}}" height="180px" width="300px" alt="{{MEDIA_URL}}{{a.Image.url}}"> </td>
+            <td> 
+              <a class="likee" id="like{{a.id}}" data-userid="{{a.id}}"> Like </a>
+            </td>
+            </tr>
+          
+    </tbody>
+    {% endfor %}
+    {% endif %}
+
+</table>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+  $('.likee').click(function()
+  {
+    var userid;
+    userid = $(this).attr("data-userid");
+    alert(userid);
+    var lnk = $(this);
+    if(lnk.text() == "Unlike")
+    {
+      $(lnk).text("Like");
+    }
+    else
+    {
+      $.ajax(
+        {
+          type: "GET",
+          url: "/likeuser",
+          data:{
+            'user_id': userid
+          },
+          success: function(data){
+            //$('#like'+userid).remove();
+            //$('message').text(data)
+            $(lnk).text("Unlike");
+          }
+        });
+    }
+  });
+</script>
+</div>
+
+</body><td>
+</html>
